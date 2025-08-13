@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Grid Resizer & Statistical Sampling</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Interactive Grid Resizer & Statistical Sampling</h1>
+        </header>
+        
+        <div class="controls-panel">
+            <div class="control-group">
+                <label for="rows">Rows:</label>
+                <input type="number" id="rows" min="2" max="10" value="2">
+            </div>
+            <div class="control-group">
+                <label for="cols">Cols:</label>
+                <input type="number" id="cols" min="2" max="10" value="2">
+            </div>
+            <div class="control-group">
+                <label for="sampleCountInput">Samples:</label>
+                <input type="number" id="sampleCountInput" min="1" max="10000" value="64" step="1">
+            </div>
+            <div class="control-group">
+                <label for="globalMean">Mean:</label>
+                <input type="number" id="globalMean" min="-10" max="10" value="5" step="0.1">
+            </div>
+            <div class="control-group">
+                <label for="stdDev">Std Dev:</label>
+                <input type="number" id="stdDev" min="0.1" max="5" value="2" step="0.1">
+            </div>
+            <div class="control-group">
+                <label for="seed">Seed:</label>
+                <input type="number" id="seed" min="0" max="999999" value="1234" placeholder="Random" step="1">
+            </div>
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="perCellDistribution" checked>
+                    Per-cell dist.
+                </label>
+            </div>
+            <div class="control-group">
+                <label>
+                    <input type="checkbox" id="stratifiedSampling">
+                    Stratified
+                </label>
+            </div>
+            <div class="cell-means-container" id="cellMeansContainer">
+                <!-- Cell controls (mean + variance) will be generated dynamically -->
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button id="generateBtn" class="btn primary">Generate Samples</button>
+            <button id="clearBtn" class="btn secondary">Clear</button>
+            <button id="resetBtn" class="btn secondary">Reset Grid</button>
+            <button id="heatmapBtn" class="btn secondary">Show Error Heatmap</button>
+        </div>
+        
+        <div class="main-content">
+            <div class="grid-area">
+                <div class="grid-container">
+                    <div id="grid" class="grid"></div>
+                    <canvas id="visualization" class="visualization-canvas"></canvas>
+                </div>
+                
+                <div class="color-legend">
+                    <h4>Value Legend</h4>
+                    <div id="colorScale" class="color-scale"></div>
+                    <div class="legend-labels">
+                        <span id="minValue">Min</span>
+                        <span id="maxValue">Max</span>
+                    </div>
+                </div>
+                
+                <div class="log-view">
+                    <h4>Performance Log</h4>
+                    <div id="logContainer" class="log-container">
+                        <div class="log-entry">Ready to calculate heatmap...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <div class="statistics">
+                    <h3>Statistics</h3>
+                    <div id="overallStats" class="stats-section">
+                        <h4>Overall</h4>
+                        <div class="stat-item">
+                            <span>Count:</span>
+                            <span id="overallCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span>Ground Truth Mean:</span>
+                            <span id="overallGroundTruthMean">-</span>
+                        </div>
+                        <div class="stat-item-with-mse">
+                            <div class="stat-item-main">
+                                <span>Grid Mean:</span>
+                                <span id="overallMean">-</span>
+                            </div>
+                            <div class="mse-value" id="overallMeanMSE"></div>
+                        </div>
+                        <div class="stat-item-with-mse">
+                            <div class="stat-item-main">
+                                <span>Mean of Cell Means:</span>
+                                <span id="meanOfCellMeans">-</span>
+                            </div>
+                            <div class="mse-value" id="meanOfCellMeansMSE"></div>
+                        </div>
+                        <div class="stat-item-with-mse">
+                            <div class="stat-item-main">
+                                <span>Post-Stratification Mean:</span>
+                                <span id="postStratificationMean">-</span>
+                            </div>
+                            <div class="mse-value" id="postStratificationMeanMSE"></div>
+                        </div>
+                        <div class="stat-item">
+                            <span>Grid Variance:</span>
+                            <span id="overallVariance">-</span>
+                        </div>
+                    </div>
+                    
+                    <div id="cellStats" class="stats-section">
+                        <h4>Cell Statistics</h4>
+                        <div id="cellStatsContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>
